@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StayEase Staff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F5F0;--s1:#FFFFFF;--s2:#F1EFE8;--line:rgba(31,59,51,.12);--line2:rgba(31,59,51,.28);--g:#1F3B33;--tx:#1B1F1D;--mu:#6B6F6A;--live:#3FAE84;--mint:#D7F0E3;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:500 16px/1.5 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer;padding:0}
+button:focus-visible,input:focus-visible{outline:2px solid var(--live);outline-offset:3px}
+.serif,h1,.brand,.room,.tile b{font-family:"Cormorant Garamond",Georgia,serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 22px 60px}
+.login{min-height:80vh;display:grid;place-items:center;padding:24px}
+.lbox{width:100%;max-width:380px;text-align:center}
+.brand{font-size:34px;font-weight:700;letter-spacing:.01em}
+.pill{display:inline-block;background:var(--mint);border:1px solid #BFE6D2;border-radius:99px;padding:3px 13px;font-size:13px;font-weight:600;color:var(--g);vertical-align:middle;margin-left:8px}
+.lbox p{color:var(--mu);margin:10px 0 26px}
+#pin{width:100%;text-align:center;font-size:28px;letter-spacing:.5em;padding:14px;background:var(--s1);border:1px solid var(--line2);border-radius:16px}
+.err{color:#a3402f;min-height:24px;margin:10px 0 0!important;font-size:14px}
+.btn{width:100%;background:var(--g);color:#F7F5F0;font-weight:600;font-size:17px;padding:16px;border-radius:99px;box-shadow:0 10px 26px -12px rgba(31,59,51,.5)}
+.hint{font-size:13px;color:var(--mu);margin-top:14px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px 0 6px;flex-wrap:wrap}
+.bar .brand{font-size:28px}
+.bar div:last-child{display:flex;gap:10px}
+.ghost{border:1px solid var(--line2);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:600;color:var(--g)}
+.ghost.fill{background:var(--g);color:#F7F5F0;border-color:var(--g)}
+h1{font-size:clamp(40px,9vw,56px);font-weight:700;line-height:1;margin:30px 0 8px;letter-spacing:-.01em}
+.sub{color:var(--mu);margin:0}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:26px 0 22px}
+@media(min-width:560px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:16px 18px;text-align:left;transition:background .2s,color .2s}
+.tile b{display:block;font-size:42px;font-weight:700;line-height:1}
+.tile span{font-size:14px;color:var(--mu);font-weight:500}
+.tile.on{background:var(--g);border-color:var(--g);color:#F7F5F0}
+.tile.on span{color:#cfe3d9}
+.grid{display:grid;gap:16px}
+@media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.card.fresh{animation:fresh 2.6s ease-out}
+@keyframes fresh{0%{box-shadow:0 0 0 0 rgba(63,174,132,.6);border-color:var(--live)}100%{box-shadow:0 0 0 16px rgba(63,174,132,0)}}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.room{font-size:42px;font-weight:700;line-height:.95}
+.room small{display:block;font:500 13px/1.3 Jost,sans-serif;color:var(--mu);margin-top:4px}
+.badge{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--g);white-space:nowrap;padding-top:6px}
+.badge i{width:9px;height:9px;border-radius:50%;background:var(--g);box-shadow:0 0 10px 2px rgba(63,174,132,.6)}
+.badge.new i{background:var(--live);animation:glow 2.2s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 8px 1px rgba(63,174,132,.7),0 0 0 0 rgba(63,174,132,.4)}50%{box-shadow:0 0 22px 5px rgba(63,174,132,.9),0 0 0 9px rgba(63,174,132,0)}}
+.card h3{font-size:19px;font-weight:600;margin:0}
+.card p{margin:2px 0 0;color:var(--mu);font-size:15px}
+.card p.note{font-style:italic;color:var(--tx)}
+.pr{display:flex;align-items:center}
+.pr i{width:11px;height:11px;border-radius:50%;border:1px solid var(--line2);background:var(--bg);flex:none}
+.pr u{flex:1;height:1px;background:var(--line2)}
+.pr i.d{background:var(--g);border-color:var(--g);box-shadow:0 0 8px rgba(63,174,132,.6)}
+.pr u.d{background:var(--g)}
+.pr i.c{background:var(--live);border-color:var(--live);animation:glow 2.2s ease-in-out infinite}
+.act{background:var(--g);color:#F7F5F0;font-weight:600;padding:13px;border-radius:99px;width:100%}
+.fin{text-align:center;color:var(--mu);font-weight:600;padding:12px;border:1px dashed var(--line2);border-radius:99px}
+.empty{text-align:center;color:var(--mu);padding:60px 10px;grid-column:1/-1}
+.empty h3{font:700 32px "Cormorant Garamond",serif;color:var(--tx);margin:0 0 4px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,30px);opacity:0;background:var(--g);color:#F7F5F0;padding:13px 22px;border-radius:99px;font-weight:600;transition:.3s;pointer-events:none;white-space:nowrap;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.seg{display:inline-flex;background:var(--s2);border:1px solid var(--line);border-radius:99px;padding:4px;margin-top:22px}
+.seg button{padding:8px 22px;border-radius:99px;font-weight:600;color:var(--mu)}
+.seg button.on{background:var(--g);color:#F7F5F0}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:24px 0 16px}
+.code{font:700 44px/1 "Cormorant Garamond",serif;letter-spacing:.3em;color:var(--g);background:var(--s2);border:1px dashed var(--line2);border-radius:14px;padding:12px 0 12px .3em;text-align:center}
+.code.x{color:#9a9e98;text-decoration:line-through}
+.card.off{opacity:.65}
+.ov{position:fixed;inset:0;background:rgba(27,31,29,.45);display:grid;place-items:center;padding:22px;z-index:20}
+.mbox{background:var(--bg);border-radius:24px;padding:28px 24px;max-width:400px;width:100%}
+.mbox h2{font:700 34px/1.05 "Cormorant Garamond",serif;margin:0 0 8px}
+select{width:100%;margin-top:20px;font:600 20px Jost,sans-serif;padding:14px;border:1px solid var(--line2);border-radius:14px;background:var(--s1);color:var(--tx)}
+#em{width:100%;margin-top:12px;font:500 17px Jost,sans-serif;padding:14px;border:1px solid var(--line2);border-radius:14px;background:var(--s1);color:var(--tx)}
+
+
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line2);border-radius:99px;padding:9px 16px;font-size:15px;font-weight:600}
+.chip.on{background:var(--g);color:#F7F5F0;border-color:var(--g)}
+.two{display:flex;gap:10px}
+.two .act{flex:1}
+.two .cxb{border-color:#d9b9b1;color:#a3402f;padding:13px 22px;font-size:15px}
+.card.off .pr{display:none}
+.badge.cx{color:var(--mu)}
+.badge.cx i{background:#b9b6ad;box-shadow:none}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div class="login" id="login"><div class="lbox">
+  <div class="brand">StayEase<span class="pill">Staff</span></div>
+  <p>Enter your staff PIN to see guest requests.</p>
+  <input id="pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Staff PIN">
+  <p class="err" id="err"></p>
+  <button class="btn" id="enter">Sign in</button>
+  <div class="hint">Demo PIN: 1234</div>
+</div></div>
+
+<div class="wrap" id="dash" hidden>
+  <div class="bar">
+    <div class="brand">StayEase<span class="pill">Staff</span></div>
+    <div><button class="ghost fill" id="sim">Simulate guest request</button><button class="ghost" id="out">Sign out</button></div>
+  </div>
+  <h1>Guest requests</h1>
+  <p class="sub">Every update you make shows on the guest’s tracker.</p>
+  <div class="seg"><button class="on" data-v="req">Requests</button><button data-v="stays">Stays</button></div>
+  <div class="tiles" id="tiles"></div>
+  <div class="grid" id="list"></div>
+  <div id="stays" hidden></div>
+</div>
+<div id="modal"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const ST=["Received","Assigned","On the way","Completed"];
+const AC=["Assign to me","Mark on the way","Mark complete"];
+const TL=["All requests","New","In progress","Completed"];
+const now=Date.now();
+let id=0,f=0,k=0,V="req";
+const mk=(room,svc,opts,note,ago,s)=>({id:++id,room,svc,opts,note,t:now-ago*60000,s});
+let R=[
+ mk("412","Amenities",["Extra towels","Pillows"],"",2,0),
+ mk("204","Room dining",["Breakfast"],"No nuts, please",6,0),
+ mk("318","Maintenance",["Air conditioning"],"The room feels warm",14,1),
+ mk("107","Housekeeping",["Turn-down service"],"",22,2),
+ mk("521","Laundry",["Dry cleaning"],"Two shirts and a suit",48,3),
+ mk("215","Concierge",["Airport transfer"],"Tomorrow at 6 am",75,3)];
+const POOL=[["309","Room dining",["Beverages"],"Two coffees"],["512","Housekeeping",["Fresh linens"],""],["126","Laundry",["Express"],"Needed by 6 pm"],["418","Concierge",["Book a table"],"Dinner for two at 8 pm"]];
+
+const AL="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const gen=()=>Array.from({length:4},()=>AL[Math.floor(Math.random()*AL.length)]).join("");
+const ROOMS=["101","107","126","204","215","309","318","412","418","512","521"];
+let S=[["412","T3Y6",190],["204","K7P2",75],["318","M4X9",300],["107","R8D5",40],["215","W2C6",600,1]].map(a=>({room:a[0],code:a[1],t:now-a[2]*60000,end:!!a[3]}));
+function stays(){
+  const L=[...S].sort((a,b)=>a.end-b.end||b.t-a.t);
+  $("#stays").innerHTML=`<div class="srow"><p class="sub">${S.filter(s=>!s.end).length} guests checked in</p><button class="ghost fill" data-ci="1">Check in a guest</button></div><div class="grid">`+L.map(s=>`<article class="card${s.end?" off":""}"><div class="ch"><div class="room">${s.room}<small>Checked in ${ago(s.t).toLowerCase()}</small></div><div class="badge${s.end?"":" new"}"><i></i>${s.end?"Checked out":"Active"}</div></div><div class="code${s.end?" x":""}">${s.code}</div>${s.end?`<div class="fin">Code expired</div>`:`<button class="act" data-co="${s.room}">Check out</button>`}</article>`).join("")+`</div>`;
+}
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let cxi=null,cxw="Duplicate request";
+function cx(id){
+  cxi=R.find(r=>r.id==id);cxw="Duplicate request";
+  $("#modal").innerHTML=`<div class="ov"><div class="mbox"><h2>Cancel request</h2><p class="sub">Room ${cxi.room}: ${cxi.svc}</p><div class="chips" id="why" style="margin-top:18px">${["Duplicate request","Guest changed their mind","Service unavailable","Other"].map((w,i)=>`<button class="chip${i?"":" on"}" data-w2="${w}">${w}</button>`).join("")}</div><button class="btn" id="cxgo" style="margin-top:20px;background:#a3402f">Confirm cancellation</button><button class="ghost" id="mx" style="width:100%;margin-top:10px;padding:14px">Keep request</button></div></div>`;
+}
+function doCx(){
+  cxi.s=3;cxi.c=true;cxi.reason=cxw;$("#modal").innerHTML="";render();toast("Room "+cxi.room+" sees: Cancelled");
+}
+function ci(){
+  const free=ROOMS.filter(r=>!S.some(s=>s.room===r&&!s.end));
+  if(!free.length){toast("All rooms are checked in");return}
+  $("#modal").innerHTML=`<div class="ov"><div class="mbox"><h2>Check in a guest</h2><p class="sub">Choose the room. The system makes the guest’s code.</p><select id="rm">${free.map(r=>`<option>${r}</option>`).join("")}</select><input id="em" type="email" placeholder="Guest email" autocomplete="off" required><button class="btn" id="gen" style="margin-top:18px">Generate code</button><button class="ghost" id="mx" style="width:100%;margin-top:10px;padding:14px">Cancel</button></div></div>`;
+}
+function doCI(){
+  const room=$("#rm").value,code=gen(),em=$("#em").value.trim();if(!/^\S+@\S+\.\S+$/.test(em)){toast("Enter the guest’s email address");return}S.unshift({room,code,t:Date.now(),end:false,email:em});
+  const e=esc(em);$("#modal").innerHTML=`<div class="ov"><div class="mbox" style="text-align:center"><h2>Room ${room} checked in</h2><p class="sub" style="font-weight:600;color:var(--g)">Code emailed to ${e}</p><div class="code" style="margin:18px 0">${code}</div><p class="sub" style="font-size:14px">The guest enters this code after scanning the QR in the room. It stops working at check-out.</p><button class="btn" id="mx" style="margin-top:20px">Done</button></div></div>`;toast("Email sent to "+em);
+  render();
+}
+const ago=t=>{const m=Math.floor((Date.now()-t)/60000);return m<1?"Just now":m<60?m+" min ago":Math.floor(m/60)+" hr ago"};
+const inF=r=>f==0||(f==1&&r.s==0)||(f==2&&(r.s==1||r.s==2))||(f==3&&r.s==3&&!r.c);
+
+function render(){
+  const sv=V==="stays";$("#tiles").hidden=$("#list").hidden=sv;$("#stays").hidden=!sv;document.querySelectorAll(".seg button").forEach(b=>b.classList.toggle("on",b.dataset.v===V));if(sv)return stays();
+  const c=[R.length,R.filter(r=>r.s==0).length,R.filter(r=>r.s==1||r.s==2).length,R.filter(r=>r.s==3&&!r.c).length];
+  $("#tiles").innerHTML=TL.map((l,i)=>`<button class="tile${f==i?" on":""}" data-f="${i}"><b>${c[i]}</b><span>${l}</span></button>`).join("");
+  const L=R.filter(inF).sort((a,b)=>(a.s==3)-(b.s==3)||b.t-a.t);
+  $("#list").innerHTML=L.length?L.map(r=>`<article class="card${r.fresh?" fresh":""}${r.c?" off":""}">
+    <div class="ch"><div class="room">${r.room}<small>${ago(r.t)}</small></div><div class="badge${r.c?" cx":r.s==0?" new":""}"><i></i>${r.c?"Cancelled":ST[r.s]}</div></div>
+    <div><h3>${r.svc}</h3><p>${r.opts.join(", ")}</p>${r.note?`<p class="note">“${r.note}”</p>`:""}</div>
+    <div class="pr">${[0,1,2,3].map(n=>(n?`<u class="${n<=r.s?"d":""}"></u>`:"")+`<i class="${n<r.s||r.s==3?"d":n==r.s?"c":""}"></i>`).join("")}</div>
+    ${r.s<3?`<div class="two"><button class="act" data-id="${r.id}">${AC[r.s]}</button><button class="ghost cxb" data-cx="${r.id}">Cancel</button></div>`:`<div class="fin">${r.c?"Cancelled by front desk: "+r.reason:"Completed"}</div>`}
+  </article>`).join(""):`<div class="empty"><h3>No requests here</h3><p>New guest requests will appear in this list.</p></div>`;
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t.h);t.h=setTimeout(()=>t.classList.remove("on"),2600)}
+function add(){
+  const p=POOL[k++%POOL.length],r=mk(p[0],p[1],p[2],p[3],0,0);r.fresh=true;R.unshift(r);
+  setTimeout(()=>delete r.fresh,2700);render();toast("New request from room "+r.room);
+}
+function login(){
+  if($("#pin").value==="1234"){$("#login").hidden=true;$("#dash").hidden=false;render();setTimeout(add,9000)}
+  else{$("#err").textContent="Incorrect PIN. Try again.";$("#pin").value="";$("#pin").focus()}
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.f!==undefined){f=+b.dataset.f;render()}
+  else if(b.dataset.id){const r=R.find(x=>x.id==b.dataset.id);r.s++;render();toast("Room "+r.room+" sees: "+ST[r.s])}
+  else if(b.dataset.v){V=b.dataset.v;render()}
+  else if(b.dataset.ci)ci();
+  else if(b.dataset.cx)cx(b.dataset.cx);
+  else if(b.dataset.w2){cxw=b.dataset.w2;document.querySelectorAll("#why .chip").forEach(c=>c.classList.toggle("on",c===b))}
+  else if(b.id==="cxgo")doCx();
+  else if(b.dataset.co){const s=S.find(x=>x.room===b.dataset.co&&!x.end);s.end=true;render();toast("Room "+s.room+" checked out. Code "+s.code+" no longer works")}
+  else if(b.id==="gen")doCI();
+  else if(b.id==="mx")$("#modal").innerHTML="";
+  else if(b.id==="enter")login();
+  else if(b.id==="sim")add();
+  else if(b.id==="out"){$("#dash").hidden=true;$("#login").hidden=false;$("#pin").value="";$("#err").textContent=""}
+});
+$("#pin").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+setInterval(()=>{if(!$("#dash").hidden)render()},30000);
+</script>
+</body>
+</html>

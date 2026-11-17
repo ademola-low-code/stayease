@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StayEase Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F5F0;--s1:#FFFFFF;--s2:#F1EFE8;--line:rgba(31,59,51,.12);--line2:rgba(31,59,51,.28);--g:#1F3B33;--tx:#1B1F1D;--mu:#6B6F6A;--live:#3FAE84;--mint:#D7F0E3;--red:#a3402f;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}
+html{height:100%;background:var(--bg)}
+body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font:500 16px/1.45 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+.serif,h1,h2,h3,.brand,.room,.code,.rw b,.cap{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%) scale(var(--k,1));background:var(--bg);overflow:hidden}
+#stage::before{content:"";position:absolute;inset:-10%;background:radial-gradient(55% 60% at 50% 0,rgba(215,240,227,.85),transparent 70%);pointer-events:none}
+.E{transition:transform .7s cubic-bezier(.2,.7,.1,1),opacity .55s ease,left .7s cubic-bezier(.2,.7,.1,1),top .7s cubic-bezier(.2,.7,.1,1)}
+
+/* ---------- front desk window ---------- */
+.win{position:absolute;left:190px;top:60px;width:900px;height:556px;background:var(--bg);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 60px -34px rgba(31,59,51,.45);overflow:hidden;opacity:0;pointer-events:none;transform-origin:0 0}
+.win.on{opacity:1}
+#stage.sd .win{left:28px;top:150px;transform:scale(.66)}
+.wb{height:46px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 18px;background:#fff}
+.wb i{width:11px;height:11px;border-radius:50%;background:var(--line2)}
+.wb span{margin-left:12px;font-weight:600;color:var(--mu);font-size:14px}
+.pn{position:absolute;left:0;right:0;top:46px;bottom:0;padding:22px 60px;opacity:0;transition:opacity .45s;pointer-events:none}
+.pn.on{opacity:1}
+.pn h2{font-size:40px;line-height:1;margin:0 0 14px}
+.fld{margin-bottom:12px}
+.fld label{display:block;color:var(--mu);font-size:14px;margin-bottom:6px}
+.fld div{background:#fff;border:1px solid var(--line2);border-radius:14px;padding:12px 16px;font-size:21px;font-weight:600;min-height:52px}
+.b{background:var(--g);color:#F7F5F0;font-weight:600;font-size:18px;padding:14px 30px;border-radius:99px;transition:transform .18s,filter .18s}
+.press{transform:scale(.94);filter:brightness(1.3)}
+#res{opacity:0;transform:translateY(8px);transition:.5s;margin-top:12px;text-align:center}
+#res.on{opacity:1;transform:none}
+#res p{font-weight:600;color:var(--g);margin:0 0 8px}
+.code{font-size:46px;line-height:1;letter-spacing:.3em;padding:10px 0 10px .3em;color:var(--g);background:var(--s2);border:1px dashed var(--line2);border-radius:14px;text-align:center}
+.code.x{color:#9a9e98;text-decoration:line-through}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:14px;opacity:0;transform:translateY(12px);transition:.5s}
+.card.on{opacity:1;transform:none}
+.glow{animation:fresh 2.4s ease-out}
+@keyframes fresh{0%{box-shadow:0 0 0 0 rgba(63,174,132,.6);border-color:var(--live)}100%{box-shadow:0 0 0 16px rgba(63,174,132,0)}}
+.ch{display:flex;justify-content:space-between;align-items:flex-start}
+.room{font-size:48px;line-height:.95}
+.room small{display:block;font:500 13px Jost,sans-serif;color:var(--mu);margin-top:4px}
+.badge{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--g);padding-top:6px}
+.badge i{width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:0 0 10px 2px rgba(63,174,132,.6)}
+.badge.new i{background:var(--live);animation:glow 2.2s ease-in-out infinite}
+.badge.off{color:var(--mu)}.badge.off i{background:#b9b6ad;box-shadow:none}
+@keyframes glow{0%,100%{box-shadow:0 0 8px 1px rgba(63,174,132,.7),0 0 0 0 rgba(63,174,132,.4)}50%{box-shadow:0 0 22px 5px rgba(63,174,132,.9),0 0 0 9px rgba(63,174,132,0)}}
+.card h3{font-size:26px;margin:0;line-height:1}
+.card p{margin:4px 0 0;color:var(--mu)}
+.fin{text-align:center;color:var(--mu);font-weight:600;padding:12px;border:1px dashed var(--line2);border-radius:99px}
+.two{display:flex;gap:10px}.two .b{flex:1}
+.ghost{border:1px solid var(--line2);border-radius:99px;padding:13px 22px;font-weight:600;color:var(--g);font-size:16px}
+
+/* ---------- phone ---------- */
+.ph{position:absolute;left:495px;top:46px;width:290px;height:560px;border-radius:44px;background:#111416;padding:11px;box-shadow:0 40px 70px -30px rgba(31,59,51,.55),inset 0 0 0 2px #2a2f33;opacity:0;pointer-events:none}
+.ph.on{opacity:1}
+#stage.sp .ph{left:155px}
+.isl{position:absolute;left:50%;top:20px;width:84px;height:24px;border-radius:14px;background:#111416;transform:translateX(-50%);z-index:4}
+.scr{position:relative;height:100%;border-radius:34px;background:var(--bg);overflow:hidden}
+.sb{position:absolute;left:0;right:0;top:0;height:46px;display:flex;justify-content:space-between;align-items:center;padding:14px 24px 0;font-size:13px;font-weight:600;z-index:3}
+.sb svg{width:50px;height:12px}
+.sc{position:absolute;inset:0;padding:58px 18px 18px;opacity:0;transition:opacity .45s;pointer-events:none}
+.sc.on{opacity:1}
+.sc h1{font-size:38px;line-height:1;margin:14px 0 10px}
+.sc p{color:var(--mu);margin:0 0 16px;font-size:14px}
+.pill{display:inline-flex;gap:8px;align-items:center;background:var(--mint);border:1px solid #BFE6D2;border-radius:99px;padding:6px 13px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--live);box-shadow:0 0 8px rgba(63,174,132,.8)}
+.brand{font-size:26px}
+.pb{display:inline-block;background:var(--g);color:#F7F5F0;font-weight:600;padding:13px 26px;border-radius:99px;margin-top:6px;transition:transform .18s,filter .18s}
+.pb.full{display:block;text-align:center;margin-top:18px}
+.pb.cx{background:var(--red)}
+.pg{display:block;text-align:center;margin-top:12px;border:1px solid #d9b9b1;color:var(--red);border-radius:99px;padding:12px;font-weight:600;transition:transform .18s}
+.cd{background:#fff;border:1px solid var(--line2);border-radius:14px;min-height:62px;text-align:center;font:700 38px/62px "Cormorant Garamond",serif;letter-spacing:.35em;padding-left:.35em}
+.rw{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);transition:.4s;border-radius:12px}
+.rw .ic{width:32px;height:32px;border-radius:50%;border:1px solid var(--line2);flex:none;display:grid;place-items:center;color:var(--g)}
+.rw .ic svg{width:16px;height:16px}
+.rw b{font-size:20px;line-height:1.1;display:block}
+.rw small{color:var(--mu);font-size:12px}
+.rw.hl{background:var(--mint);padding-left:8px}
+.cp{display:inline-block;border:1px solid var(--line2);border-radius:99px;padding:8px 14px;font-size:13px;font-weight:600;margin:0 6px 8px 0;transition:.3s}
+.cp.on{background:var(--g);color:#F7F5F0;border-color:var(--g)}
+.tc{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:10px}
+.tc h3{font-size:26px;margin:0}
+.tl{padding-left:30px;margin-top:16px}
+.st{position:relative;padding-bottom:18px}
+.st:last-child{padding-bottom:0}
+.st::before{content:"";position:absolute;left:-23px;top:18px;bottom:-4px;width:1px;background:var(--line2)}
+.st:last-child::before{display:none}
+.st.done::before{background:var(--g);box-shadow:0 0 8px rgba(63,174,132,.5)}
+.dot{position:absolute;left:-30px;top:4px;width:14px;height:14px;border-radius:50%;border:1px solid var(--line2);background:var(--bg);transition:.4s}
+.st.done .dot{background:var(--g);border-color:var(--g);box-shadow:0 0 12px 1px rgba(63,174,132,.7)}
+.st.cur .dot{background:var(--live);border-color:var(--live);animation:glow 2.2s ease-in-out infinite}
+.st b{display:block;font-weight:600;font-size:15px}
+.st small{color:var(--mu);font-size:12px}
+.st:not(.done):not(.cur) b{color:#9a9e98}
+.tc .cxd{display:flex;align-items:center;gap:9px;font-weight:600;color:var(--mu);margin-top:16px}
+.tc .cxd i{width:10px;height:10px;border-radius:50%;background:#b9b6ad}
+
+/* ---------- right pane (behind the scenes) ---------- */
+.rp{position:absolute;left:620px;top:110px;width:640px;opacity:0;pointer-events:none;transform:translateX(24px)}
+.rp.on{opacity:1;transform:none}
+.rp .t{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:0 0 8px}
+.fr{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px -30px rgba(31,59,51,.5)}
+.fr img{display:block;width:100%}
+.fr.run{animation:runb 1.2s ease-in-out infinite}
+@keyframes runb{0%,100%{box-shadow:0 0 0 0 rgba(63,174,132,.0),0 20px 40px -30px rgba(31,59,51,.5)}50%{box-shadow:0 0 0 5px rgba(63,174,132,.35),0 20px 40px -30px rgba(31,59,51,.5)}}
+.tag{position:absolute;left:12px;top:12px;background:var(--g);color:#F7F5F0;font-size:13px;font-weight:600;padding:6px 12px;border-radius:99px;display:flex;align-items:center;gap:8px;opacity:0;transition:.3s}
+.tag.on{opacity:1}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--live);animation:glow 1.4s ease-in-out infinite}
+.tag.done{background:var(--live)}.tag.done i{animation:none;background:#fff}
+.sheet{margin-top:14px;opacity:0;transform:translateY(10px);transition:.5s}
+.sheet.on{opacity:1;transform:none}
+.sh{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;height:var(--h,110px)}
+.sh img{position:absolute;left:0;top:0;width:var(--w,170%);max-width:none}
+.hl{position:absolute;left:0;right:0;top:var(--y);height:var(--hh);background:rgba(63,174,132,.22);border-top:2px solid var(--live);border-bottom:2px solid var(--live);opacity:0;transition:.4s}
+.hl.on{opacity:1}
+.sheet .t{margin:0 0 6px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--g)}
+
+/* ---------- full-screen shot ---------- */
+.shot{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;padding:60px 90px 110px}
+.shot.on{opacity:1}
+.shot .fr{max-width:100%;max-height:100%;animation:zoom 6s ease-out forwards}
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.045)}}
+.shot .fr img{max-height:520px;width:auto;max-width:100%}
+
+/* ---------- montage ---------- */
+.grid{position:absolute;inset:0;padding:70px 70px 120px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 20px;opacity:0;pointer-events:none;transform:scale(.97)}
+.grid.on{opacity:1;transform:none}
+.grid .g{opacity:0;transform:translateY(10px);transition:.5s}
+.grid .g.on{opacity:1;transform:none}
+.grid .fr img{width:100%}
+.grid b{display:block;font-size:14px;font-weight:600;margin:8px 0 0;color:var(--g)}
+.grid small{color:var(--mu);font-size:12px}
+
+/* ---------- labels, captions, overlays ---------- */
+#lab{position:absolute;left:0;right:0;top:18px;text-align:center;opacity:0;transition:.4s;z-index:6}
+#lab span{display:inline-block;background:var(--mint);border:1px solid #BFE6D2;border-radius:99px;padding:5px 16px;font-weight:600;font-size:14px;color:var(--g)}
+#lab.on{opacity:1}
+#stage.sd #lab,#stage.sp #lab{left:0;right:auto;width:600px}
+#lab2{position:absolute;left:620px;width:640px;top:18px;text-align:center;opacity:0;transition:.4s;z-index:6}
+#lab2 span{display:inline-block;background:var(--g);border-radius:99px;padding:5px 16px;font-weight:600;font-size:14px;color:#fff}
+#lab2.on{opacity:1}
+#cap{position:absolute;left:0;right:0;bottom:30px;text-align:center;font-size:36px;line-height:1.1;color:var(--g);opacity:0;transform:translateY(6px);transition:.4s;padding:0 60px;z-index:6}
+#cap.on{opacity:1;transform:none}
+#bar{position:absolute;left:0;bottom:0;height:5px;width:0;background:var(--live);z-index:7}
+.ov{position:absolute;inset:0;background:var(--bg);display:grid;place-items:center;text-align:center;opacity:0;pointer-events:none;transition:opacity .6s;z-index:8;padding:40px}
+.ov.on{opacity:1;pointer-events:auto}
+.ov h1{font-size:72px;line-height:1;margin:0 0 14px}
+.ov .brand{font-size:64px;margin-bottom:6px}
+.ov p{color:var(--mu);font-size:22px;margin:0 0 18px}
+.ov .b{font-size:22px;padding:16px 44px}
+.ov .hint{font-size:15px;margin:18px 0 0}
+.ov .by{margin-top:34px;font-size:17px;color:var(--tx);font-weight:600}
+.ov .by small{display:block;color:var(--mu);font-weight:500;font-size:14px;margin-top:2px}
+.ov .stack{display:flex;gap:14px;justify-content:center;margin:10px 0 0}
+.ov .stack span{border:1px solid var(--line2);border-radius:99px;padding:8px 18px;font-weight:600;font-size:15px;color:var(--g)}
+.ov .next{margin-top:18px;color:var(--mu);font-size:16px}
+.ov .next b{color:var(--g)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- front desk -->
+  <div class="win E">
+    <div class="wb"><i></i><i></i><i></i><span>StayEase Staff</span></div>
+    <div class="pn" id="p-ci">
+      <h2>Check in a guest</h2>
+      <div class="fld"><label>Room</label><div>413</div></div>
+      <div class="fld"><label>Guest email</label><div id="em">&nbsp;</div></div>
+      <button class="b" id="gen">Generate code</button>
+      <div id="res"><p>Code emailed to guest@email.com</p><div class="code">P86B</div></div>
+    </div>
+    <div class="pn" id="p-q">
+      <h2>Guest requests</h2>
+      <div class="card" id="rq">
+        <div class="ch"><div class="room">413<small>Just now</small></div><div class="badge new" id="sb"><i></i><span>Received</span></div></div>
+        <div><h3>Amenities</h3><p>Extra towels, Pillows</p></div>
+        <div class="two"><button class="b" id="sa">Assign to me</button><button class="ghost">Cancel</button></div>
+      </div>
+    </div>
+    <div class="pn" id="p-st">
+      <h2>Stays</h2>
+      <div class="card" id="stc">
+        <div class="ch"><div class="room">413<small>Checked in today</small></div><div class="badge new" id="stb"><i></i><span>Active</span></div></div>
+        <div class="code" id="stcode">P86B</div>
+        <button class="b" id="co">Check out</button>
+        <div class="fin" id="fn" style="display:none">Code expired</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- phone -->
+  <div class="ph E"><div class="isl"></div><div class="scr">
+    <div class="sb"><span>9:41</span><svg viewBox="0 0 54 12" fill="#1B1F1D"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="1" width="3" height="11" rx="1"/><path d="M26 4.5a7 7 0 0 1 8 0l-1.2 1.5a5 5 0 0 0-5.6 0zM28 7.5a4 4 0 0 1 4 0L30 10z"/><rect x="38" y="1.5" width="13" height="9" rx="2.5" fill="none" stroke="#1B1F1D"/><rect x="39.5" y="3" width="10" height="6" rx="1.5"/><rect x="52" y="4" width="1.5" height="4" rx=".7"/></svg></div>
+    <div class="sc on" id="s-home"><div class="brand">StayEase</div><div style="margin-top:18px"><span class="pill"><i></i>Scan. Request. Relax.</span></div><h1>Your stay, just a scan away</h1><p>From extra towels to room service, get what you need instantly.</p><span class="pb" id="scan">Scan a QR code</span></div>
+    <div class="sc" id="s-code"><span class="pill"><i></i>Room 413 detected</span><h1>Enter your code</h1><p>Type the 4-character code from your email.</p><div class="cd" id="cd">&nbsp;</div><span class="pb full" id="unl">Unlock my room</span></div>
+    <div class="sc" id="s-svc"><span class="pill"><i></i>Room 413 detected</span><h1>How can we help today?</h1>
+      <div class="rw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18V7M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/></svg></span><div><b>Housekeeping</b><small>Refresh and tidy your room</small></div></div>
+      <div class="rw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h18M5 17a7 7 0 0 1 14 0M12 8V6"/></svg></span><div><b>Room dining</b><small>Delivered to your door</small></div></div>
+      <div class="rw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 4L3 7l2 4 2-1v10h10V10l2 1 2-4-5-3a4 4 0 0 1-8 0z"/></svg></span><div><b>Laundry</b><small>Washed, pressed and returned</small></div></div>
+      <div class="rw" id="ra"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span><div><b>Amenities</b><small>Towels, pillows and more</small></div></div>
+      <div class="rw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="12" r="3.5"/><path d="M11.5 12H21M17 12v3"/></svg></span><div><b>Concierge</b><small>Cars, tables and late checkout</small></div></div></div>
+    <div class="sc" id="s-form"><h1>Amenities</h1><p>Towels, pillows and more</p><div><span class="cp" id="ch1">Extra towels</span><span class="cp" id="ch2">Pillows</span><span class="cp">Toiletries</span><span class="cp">Slippers</span></div><span class="pb full" id="snd">Send request</span></div>
+    <div class="sc" id="s-track"><h1 style="font-size:34px">Track</h1><div class="tc"><h3>Amenities</h3><p style="margin:2px 0 0" id="tsub">Extra towels, Pillows</p><div class="tl" id="tl">
+      <div class="st" id="t0"><span class="dot"></span><b>Received</b><small>We have your request</small></div>
+      <div class="st" id="t1"><span class="dot"></span><b>Assigned</b><small>A team member is on it</small></div>
+      <div class="st" id="t2"><span class="dot"></span><b>On the way</b><small>Heading to your room</small></div>
+      <div class="st" id="t3"><span class="dot"></span><b>Completed</b><small>All done. Enjoy your stay</small></div></div>
+      <div class="cxd" id="cxd" style="display:none"><i></i>Cancelled</div><p id="cxp" style="display:none;margin:10px 0 0;font-size:13px">Nothing is deleted. It stays in your history.</p></div>
+      <span class="pg" id="cxb" style="display:none">Cancel request</span></div>
+    <div class="sc" id="s-cx"><h1>Cancel request</h1><p>Amenities: Slippers</p><div><span class="cp on">Changed my mind</span><span class="cp">Sent by mistake</span><span class="cp">Duplicate</span></div><span class="pb full cx" id="cxgo">Confirm cancellation</span></div>
+    <div class="sc" id="s-exp" style="text-align:center;padding-top:210px"><h1 style="font-size:34px">This code has expired</h1><p>Please ask reception.</p></div>
+  </div></div>
+
+  <!-- behind the scenes pane -->
+  <div class="rp E" id="rp">
+    <div class="fr" id="rpf"><img id="rpimg" src="img/flow-checkin.jpg" alt=""><div class="tag" id="tag"><i></i><span>Running</span></div></div>
+    <div class="sheet" id="rps"><p class="t" id="rpnm">Google Sheet</p><div class="sh" id="rpsh"><img id="rpsimg" src="img/sheet-stays.jpg" alt=""><div class="hl" id="rphl"></div></div></div>
+  </div>
+
+  <!-- full-screen screenshot -->
+  <div class="shot E" id="shot"><div class="fr"><img id="shotimg" src="img/email.jpg" alt=""></div></div>
+
+  <!-- montage -->
+  <div class="grid E" id="grid"></div>
+
+  <div id="lab"></div><div id="lab2"></div><div id="cap"></div><div id="bar"></div>
+
+  <div class="ov on" id="start"><div><div class="brand">StayEase</div><p>Self-playing demo, about 70 seconds.<br>Start your screen recording, then tap play.</p><button class="b" id="go">Play demo</button><p class="hint">Best on a laptop in full screen, landscape.</p></div></div>
+  <div class="ov" id="title"><div><h1>Guests call reception<br>for towels.</h1><p>What if they didn't have to?</p></div></div>
+  <div class="ov" id="end"><div><div class="brand">StayEase</div><p>Guests scan. Staff act. Everything is logged.</p>
+    <div class="stack"><span>n8n</span><span>Google Sheets</span><span>Gmail</span></div>
+    <p class="next">Coming next: <b>WhatsApp, Viber and SMS</b> delivery</p>
+    <div class="by">Built by Ganiyu Usman Ademola<small>DEE_LINK, AI and automation</small></div>
+    <button class="b" id="again" style="margin-top:26px;font-size:17px;padding:12px 30px">Replay</button></div></div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),w=ms=>new Promise(r=>setTimeout(r,ms));
+const ST=["Received","Assigned","On the way","Completed"],AC=["Assign to me","Mark on the way","Mark complete"];
+const stage=$("#stage");
+function fit(){document.documentElement.style.setProperty("--k",Math.min(innerWidth/1280,innerHeight/720))}
+addEventListener("resize",fit);fit();
+const on=(s,v=true)=>$(s).classList.toggle("on",v);
+const scr=n=>document.querySelectorAll(".sc").forEach(e=>e.classList.toggle("on",e.id==="s-"+n));
+const pan=n=>document.querySelectorAll(".pn").forEach(e=>e.classList.toggle("on",e.id==="p-"+n));
+function cap(t){const c=$("#cap");c.classList.remove("on");setTimeout(()=>{c.textContent=t;c.classList.add("on")},300)}
+function lab(t,id="#lab"){const l=$(id);l.classList.remove("on");if(t)setTimeout(()=>{l.innerHTML="<span>"+t+"</span>";l.classList.add("on")},300)}
+function tap(s){const e=$(s);e.classList.add("press");setTimeout(()=>e.classList.remove("press"),360)}
+async function type(s,t,ms){const e=$(s);e.textContent="";for(const ch of t){e.textContent+=ch;await w(ms)}}
+function setStep(n){$("#sb span").textContent=ST[n];$("#sb").className="badge"+(n==3?"":" new");const a=$("#sa");if(n<3)a.textContent=AC[n];else a.parentElement.style.display="none"}
+function setPhone(n){[0,1,2,3].forEach(i=>{$("#t"+i).className="st"+(i<n||n==3?" done":i==n?" cur":"")})}
+
+/* layout modes: fd = full desk, fp = full phone, sd = split desk+right, sp = split phone+right, none */
+function mode(m){
+  stage.className=m;
+  on(".win",m==="fd"||m==="sd");on(".ph",m==="fp"||m==="sp");
+  if(m!=="sd"&&m!=="sp"){on("#rp",false);$("#lab2").classList.remove("on")}
+}
+async function backend(flow,sheet,opts){
+  const f=$("#rpf"),t=$("#tag");
+  $("#rpimg").src="img/flow-"+flow+".jpg";on("#rps",false);on("#rphl",false);
+  t.className="tag on";t.querySelector("span").textContent="Running";f.classList.add("run");
+  on("#rp");lab("n8n: "+opts.name,"#lab2");
+  await w(opts.run||2200);
+  f.classList.remove("run");t.className="tag on done";t.querySelector("span").textContent="Done";
+  const sh=$("#rpsh");$("#rpsimg").src="img/sheet-"+sheet+".jpg";sh.style.setProperty("--w",opts.w);sh.style.setProperty("--h",opts.h);
+  $("#rphl").style.setProperty("--y",opts.y);$("#rphl").style.setProperty("--hh",opts.hh);$("#rpnm").textContent=opts.tab;
+  on("#rps");await w(700);on("#rphl");
+}
+
+function reset(){
+  $("#em").innerHTML="&nbsp;";$("#cd").innerHTML="&nbsp;";on("#res",false);on("#rq",false);on("#stc",false);
+  $("#rq").classList.remove("glow");$("#sa").parentElement.style.display="";$("#sa").textContent=AC[0];setStep(0);setPhone(0);
+  on("#ch1",false);on("#ch2",false);$("#ra").classList.remove("hl");
+  $("#stb span").textContent="Active";$("#stb").className="badge new";$("#stcode").classList.remove("x");
+  $("#co").style.display="";$("#fn").style.display="none";
+  $("#tsub").textContent="Extra towels, Pillows";$("#cxd").style.display="none";$("#cxp").style.display="none";$("#cxb").style.display="none";$("#tl").style.display="";
+  on("#grid",false);on("#shot",false);on("#rp",false);$("#cap").classList.remove("on");lab("");
+  pan("none");scr("home");mode("none");
+}
+
+const FLOWS=[["checkin","Check-in","makes the code, emails it"],["unlock","Unlock","checks the code, locks after 3 tries"],["request","Request","saves the request and history"],["status","Status","returns the guest's requests"],["update","Update or Cancel","rules for staff and guests"],["checkout","Check-out","expires the code"]];
+$("#grid").innerHTML=FLOWS.map(f=>`<div class="g"><div class="fr"><img src="img/flow-${f[0]}.jpg" alt=""></div><b>${f[1]}</b><small>${f[2]}</small></div>`).join("");
+
+async function play(){
+  on("#start",false);on("#end",false);reset();
+  const b=$("#bar");b.style.transition="none";b.style.width="0";void b.offsetWidth;b.style.transition="width 67s linear";b.style.width="100%";
+
+  on("#title");await w(3800);on("#title",false);
+
+  /* 1. check-in, split with backend */
+  mode("sd");lab("Front desk");cap("Front desk checks in the guest. n8n makes the code and emails it.");pan("ci");await w(900);
+  await type("#em","guest@email.com",55);await w(400);tap("#gen");await w(400);on("#res");
+  await backend("checkin","stays",{name:"Check-in",run:2000,w:"180%",h:"100px",y:"67%",hh:"28%",tab:"Stays tab: new row, room 413, code P86B"});
+  await w(2600);
+
+  /* 2. real email */
+  mode("none");lab("Guest inbox");cap("The real email, sent by Gmail through n8n.");
+  $("#shotimg").src="img/email.jpg";const sf=$("#shot .fr");sf.style.animation="none";void sf.offsetWidth;sf.style.animation="";on("#shot");await w(4200);on("#shot",false);
+
+  /* 3. guest unlock */
+  mode("fp");lab("Guest phone");cap("Scan the room QR. Enter the code. Only that room opens.");scr("home");await w(1300);tap("#scan");await w(700);
+  scr("code");await w(600);await type("#cd","P86B",300);await w(500);tap("#unl");await w(700);scr("svc");await w(1500);
+
+  /* 4. guest request */
+  cap("Two taps to ask for what they need.");$("#ra").classList.add("hl");await w(900);scr("form");await w(800);on("#ch1");await w(600);on("#ch2");await w(800);tap("#snd");await w(600);
+  scr("track");setPhone(0);
+
+  /* 5. split: request backend */
+  mode("sp");cap("n8n checks the code, saves the request and logs it.");
+  await backend("request","requests",{name:"Request",run:2200,w:"220%",h:"66px",y:"47%",hh:"40%",tab:"Requests tab: new row, status Received"});
+  await w(2600);
+
+  /* 6. split: staff assign + update backend */
+  mode("sd");lab("Front desk");cap("Staff tap once. n8n updates the sheet and writes history.");pan("q");on("#rq");$("#rq").classList.add("glow");await w(1500);
+  tap("#sa");setStep(1);
+  await backend("update","history",{name:"Update",run:1800,w:"165%",h:"100px",y:"64%",hh:"27%",tab:"History tab: Received to Assigned, by Staff"});
+  await w(2200);tap("#sa");setStep(2);await w(1200);tap("#sa");setStep(3);await w(1400);
+
+  /* 7. guest tracker */
+  mode("fp");lab("Guest phone");cap("The guest watches it live. No calls, no waiting.");scr("track");await w(900);setPhone(1);await w(1300);setPhone(2);await w(1300);setPhone(3);await w(2000);
+
+  /* 8. guest cancel */
+  cap("Changed your mind? Cancel before it's on the way.");scr("svc");$("#ra").classList.add("hl");await w(900);scr("form");on("#ch1",false);on("#ch2",false);await w(500);
+  const c4=document.querySelectorAll("#s-form .cp")[3];c4.classList.add("on");await w(700);tap("#snd");await w(600);
+  $("#tsub").textContent="Slippers";setPhone(0);$("#cxb").style.display="block";scr("track");await w(1600);tap("#cxb");await w(500);
+  scr("cx");await w(1400);tap("#cxgo");await w(600);
+  $("#tl").style.display="none";$("#cxd").style.display="flex";$("#cxp").style.display="block";$("#cxb").style.display="none";scr("track");await w(2400);c4.classList.remove("on");
+
+  /* 9. check-out */
+  mode("fd");lab("Front desk");cap("Check-out. The code stops working.");pan("st");on("#stc");await w(1400);tap("#co");await w(500);
+  $("#stb span").textContent="Checked out";$("#stb").className="badge off";$("#stcode").classList.add("x");$("#co").style.display="none";$("#fn").style.display="block";await w(1500);
+  mode("fp");lab("Guest phone");scr("exp");await w(2600);
+
+  /* 10. montage */
+  mode("none");lab("The system");cap("6 n8n workflows. 1 Google Sheet. 0 API cost.");on("#grid");
+  const gs=document.querySelectorAll("#grid .g");for(const g of gs){g.classList.add("on");await w(260)}
+  await w(4200);on("#grid",false);gs.forEach(g=>g.classList.remove("on"));
+
+  $("#cap").classList.remove("on");lab("");on("#end");
+}
+$("#go").onclick=play;$("#again").onclick=play;
+</script>
+</body>
+</html>
